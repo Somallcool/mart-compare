@@ -39,11 +39,29 @@ function App() {
     script.onload = () => {
       window.kakao.maps.load(() => {
         if (!mapRef.current) return
+
         const options = {
           center: new window.kakao.maps.LatLng(37.5665, 126.9780),
           level: 3
         }
-        new window.kakao.maps.Map(mapRef.current, options)
+        const map = new window.kakao.maps.Map(mapRef.current, options)
+
+        // 임시 CU 마커 (서울시청 근처)
+        const markerPosition = new window.kakao.maps.LatLng(37.5665, 126.9780)
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition,
+          title: 'CU 서울시청점'
+        })
+        marker.setMap(map)
+
+        // 마커 클릭 시 인포윈도우 표시
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: '<div style="padding:5px">CU 서울시청점</div>'
+        })
+
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          infowindow.open(map, marker)
+        })
       })
     }
   }, [])
